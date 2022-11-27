@@ -1,0 +1,120 @@
+:root {
+  --background-color: rgb(6, 11, 25);
+  --border-color: rgb(255, 255, 255, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0px;
+  overflow: hidden;
+}
+
+nav {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid var(--border-color);
+}
+
+nav > .nav-section {
+  padding: 3rem 2rem;
+  display: flex;
+  gap: 1rem;
+  border-left: 1px solid var(--border-color);
+  flex-basis: calc(100% / 3);
+  align-items: center;
+  justify-content: center;
+}
+
+#nav-logo-section {
+  justify-content: flex-start;
+}
+
+#nav-logo-section > a > i {
+  font-size: 2.5rem;
+}
+
+#nav-link-section {
+  gap: 6rem;
+}
+
+#nav-link-section {
+  gap: 3rem;
+}
+
+h1, h2, h3, a, p, span {
+  font-family: JetBrains Mono, monospace;
+  font-weight: 400;
+  color: white;
+}
+
+a {
+  text-decoration: none;
+}
+
+main {
+  flex-grow: 1;
+  position: relative;
+}
+
+main > article {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 2fr 1fr;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+}
+
+main > article[data-status="active"] {
+  transition: transform 500ms ease;
+}
+
+main > article[data-status="inactive"] {
+  transform: translateX(-100%);
+}
+
+main > article > .article-section {
+  height: 100%;
+}
+
+main > article > .article-description-section,
+main > article > .article-nav-section {
+  border-left: 1px solid var(--border-color);
+}
+
+main > article > .article-title-section,
+main > article > .article-nav-section {
+  border-top: 1px solid var(--border-color);
+}
+
+.article-nav-section {
+  display: flex;
+  width: 100%;
+}
+
+.article-nav-section > button {
+  display: flex;
+  flex-basis: 50%;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background-color);
+  color: white;
+  font-size: 3rem;
+  border: none;
+}
+
+.article-nav-right-button {
+  transform: scale(-1, 1);
+}
+
+.article-description-section > p {
+  padding: 10px;
+}
