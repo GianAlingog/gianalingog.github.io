@@ -25,3 +25,13 @@ const handleLeftClick = () => {
   
   activeIndex = nextIndex;
 }
+
+const handleNavClick = (dataIndex) => {
+  const currentGroup = document.querySelector(`[data-index="${activeIndex}"]`);
+  const nextGroup = document.querySelector(`[data-index="${dataIndex}"]`);
+
+  currentGroup.dataset.status = "inactive";
+  nextGroup.dataset.status = "active";
+  
+  activeIndex = dataIndex;
+}
