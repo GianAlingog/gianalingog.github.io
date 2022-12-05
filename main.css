@@ -115,6 +115,10 @@ main > article > .article-nav-section {
   transform: scale(-1, 1);
 }
 
+.article-description-section {
+  overflow: auto;
+}
+
 .article-description-section > p {
   padding: 0px 20px;
   text-align: justify;
@@ -125,9 +129,23 @@ main > article > .article-nav-section {
   padding-left: 50px;
 }
 
-article[data-index="2"] > div.article-image-section {
-  background-image: url(oiNx3SB4uQVtn0u8OA1T--2--8rnca-removebg-preview.png);
+article[data-index="0"] > div.article-image-section {
+  background-image: url(beginnings.jpg);
   background-repeat: no-repeat;
   background-size: contain;
-  background-position: 55%;
+  background-position-x: 50%;
+}
+
+article[data-index="1"] > div.article-image-section {
+  background-image: url(journey.jpg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position-x: 50%;
+}
+
+article[data-index="2"] > div.article-image-section {
+  background-image: url(future.jpg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position-x: 50%;
 }
