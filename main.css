@@ -1,5 +1,5 @@
 :root {
-  --background-color: rgb(6, 11, 25);
+  --background-color: rgb(1, 16, 56);
   --border-color: rgb(255, 255, 255, 0.1);
 }
 
@@ -40,12 +40,20 @@ nav > .nav-section {
   font-size: 2.5rem;
 }
 
-#nav-link-section {
-  gap: 6rem;
+#nav-social-section > a > i {
+  font-size: 2rem;
+}
+
+#nav-social-section > a > img {
+  width: 40px;
 }
 
 #nav-link-section {
   gap: 3rem;
+}
+
+#nav-social-section {
+  gap: 6rem;
 }
 
 h1, h2, h3, a, p, span {
@@ -66,7 +74,7 @@ main {
 main > article {
   display: grid;
   height: 100%;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 2fr 1fr;
   position: absolute;
   left: 0px;
@@ -88,6 +96,14 @@ main > article > .article-section {
 main > article > .article-description-section,
 main > article > .article-nav-section {
   border-left: 1px solid var(--border-color);
+}
+
+main > article > .article-description-section {
+  grid-column: 2 / span 2;
+}
+
+main > article > .article-title-section {
+  grid-column: 1 / span 2;
 }
 
 main > article > .article-title-section,
