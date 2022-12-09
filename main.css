@@ -5,6 +5,9 @@
 
 * {
   box-sizing: border-box;
+  font-family: JetBrains Mono, monospace;
+  font-weight: 400;
+  color: white;
 }
 
 body {
@@ -49,17 +52,11 @@ nav > .nav-section {
 }
 
 #nav-link-section {
-  gap: 3rem;
+  gap: 2rem;
 }
 
 #nav-social-section {
   gap: 6rem;
-}
-
-h1, h2, h3, a, p, span {
-  font-family: JetBrains Mono, monospace;
-  font-weight: 400;
-  color: white;
 }
 
 a {
@@ -102,6 +99,14 @@ main > article > .article-description-section {
   grid-column: 2 / span 2;
 }
 
+main > article[data-index="3"] > #article-1 {
+  grid-column: 2 / span 1;
+}
+
+main > article[data-index="3"] > #article-2 {
+  grid-column: 3 / span 1;
+}
+
 main > article > .article-title-section {
   grid-column: 1 / span 2;
 }
@@ -136,6 +141,11 @@ main > article > .article-nav-section {
 }
 
 .article-description-section > p {
+  padding: 0px 20px;
+  text-align: justify;
+}
+
+.article-image-section > p {
   padding: 0px 20px;
   text-align: justify;
 }
