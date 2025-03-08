@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<!-- 
+Author: Gian Alingog
+Date: 03/08/2025
+Saishuu Shinpan
+https://www.hackerrank.com/contests/noi-ph-2019/challenges/saishuu-shinpan/problem
+-->
+
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" integrity="sha384-zh0CIslj+VczCZtlzBcjt5ppRcsAmDnRem7ESsYwWwg3m/OaJ2l4x7YBZl9Kxxib" crossorigin="anonymous">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js" integrity="sha384-Rma6DA2IPUwhNxmrB/7S3Tno0YY7sFu9WSYMCuulLhIqYSGZ2gKCJWIqhBWqMQfh" crossorigin="anonymous"></script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+
+    <style>
+      .katex {
+        text-align: left !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Saishuu Shinpan</h1>
+    <p><b>Editorialist(s):</b> Gian Alingog</p>
+    <!-- <p>
+        $$x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}.$$
+    </p> -->
+
+    <h2>Main Idea</h2>
+    <p>To solve this problem, we need to choose \(l\) and \(r\) that satisfy \(L_1 \leqslant l \leqslant L_2\) and \(R_1 \leqslant r \leqslant R_2\), which maximizes the sum of all elements within that range, inclusive.</p>
+    <p>If you are familiar with the <i>max subarray sum</i> problem, this is essentially what we need to solve. Of course, it isn't that easy! We are given further requirements such as the ability to make a <i>point update</i> and restrictions on the ranges we can consider, as previously described.</p>
+
+    <h2>Subtask 1 (10 points)</h2>
+    <p>The first subtask can be solved with a segment tree or BIT.</p>
+    <p>Because \(L_1 = L_2\) and \(R_1 = R_2\), the range we have to consider is already given to us (i.e., there is only one possible combination of \(l\) and \(r\)). There is no need to calculate a <i>max subarray sum</i>, we only need to be able to query the sum of all elements: \(\sum V_i\) such that \(l \leqslant i \leqslant r\).</p>
+    <p>Now, the first idea one might have to achieve this is to create a <i>prefix sum</i>, allowing us to query a range in \(O(1)\) time; however, it can be seen each point update will take \(O(N)\) time, resulting in an \(O(N*Q)\) overall time complexity.</p>
+    <p>To work around this, we can use a segment tree or BIT to efficiently handle our <i>point updates</i> and <i>range queries</i> in \(O(log(N))\). This results in an overall time complexity of \(O((N+Q)log(N))\).</p>
+    <p>We will use a segment tree because we can easily extend this implementation for the later subtasks:</p>
+
+    <!-- code snippet -->
+
+    <h2>Subtask 2-3 (12+12 points)</h2>
+    <p>The second and third subtask can be solved by making a greedy observation.</p>
+    <p>For now, let's focus on the third subtask, which has the following restriction: \(0 \leqslant V_i, X\)</p>
+    <p>Because all values are and will be positive, it can be observed that the <i>max subarray sum</i> will always be the <b>widest</b> subarray.</p>
+    <p>So, to maximize the subarray size, we can do the following: \(l = L_1\) and \(r = R_2\).</p>
+    <p>The third subtask can be solved similarly.</p>
+
+    <h2>Subtask 4 (16 points)</h2>
+    <p>There are several ways to approach the fourth subtask, but they all require solutions beyond greedy.</p>
+    <p>One way to solve this would to perform a tree traversal on our segment tree to find the index that results in either the best prefix or suffix sum that remains within the restrictions on \(l\) and \(r\).</p>
+    <p>However, there is a much neater solution that we will discuss in the next section, alongside subtask 5 for AC.</p>
+
+    <h2>Subtask 4-5 (16+50 points)</h2>
+    <p>To AC this problem, a series of observations will lead us to the main optimization: Divide and Conquer.</p>
+    
+    <h3>Thought Process</h3>
+    <p>Feel free to skip this section, if you feel this is not relevant to you.</p>
+    <p>If performing <i>Kadane's algorithm</i> will take \(O(N)\), then it will take us a total of \(O(N*Q)\). How might we optimize this? Hint: Kadane's is a dynamic programming algorithm.</p>
+    <p>Surely, there should be a way to combine the <i>maximum subarray sum</i> of two ranges... This would allow us to reduce the problem and prune computed branches already (<i>overlapping subproblems</i> and <i>optimal substructure property</i>).</p>
+    <p>In fact, there is a way to do this, we just have to be careful about the different cases we have to consider:</p>
+    
+    <h3>Solution</h3>
+    <p>For each vertex in our segment tree, let us store the <i>total sum, max prefix sum, max suffix sum, and best subarray sum</i>. The last state seems to be relevant to our problem, but what of the first three? Well, to combine the <i>maximum subarray sum</i> of two ranges (or vertices in our segment tree), we can do the following operations on a vertex with left and right children:</p>
+    <p>$$totalSum = leftSum + rightSum$$ $$maxPrefixSum = max(leftPrefixSum, leftSum + rightPrefixSum)$$ $$maxSuffixSum = max(rightSuffixSum, rightSum + leftSuffixSum)$$ $$bestSubarraySum = max(leftBestSubarraySum, rightBestSubarraySum, leftSuffixSum + rightPrefixSum)$$</p>
+    <p>Take a moment to convince yourself why this works!</p>
+    <p>Given that we can now query these values on any range, we've now simplified the problem to "how do we properly query our segment tree given our restrictions on \(l\) and \(r\)?"</p>
+    <p>We can reduce this problem to two cases: \(L_2 < R_1\) and \(L_2 \geqslant R_2\) (also known as subtask 4 and 5!).*</p>
+    <p><sub>*Note that the <i>or equals</i> part is different from the actual restriction on the fourth subtask. This is to allow for the explanation to be simpler.</sub></p>
+
+    <h4>Case 1: \(L_2 < R_1\)</h4>
+    <p>For this case, we can observe that no matter what, all elements in the range \((L_2, R_1)\) will be included in our <i>max subarray sum</i>.</p>
+    <p>Thus, $$ans = totalSum(L_2+1, R_1-1) + maxPrefixSum(L_1, L_2) + maxSuffixSum(R_1, R_2)$$</p>
+
+    <h4>Case 2: \(L_2 \geqslant R_1\)</h4>
+    <p>This case is a lot trickier than the other one, but we just have to think about the possible scenarios for how the <i>max subarray sum</i> can form.</p>
+    <p>Convince yourself of the following: $$ans =max(bestSubarraySum(R_1, L_2),$$ $$maxPrefixSum(R_1, L_2) + maxSuffixSum(L_1, R_1-1),$$ $$maxSuffixSum(R_1, L_2) + maxPrefixSum(L_2+1, R_2),$$ $$totalSum(R_1, L_2) + maxSuffixSum(L_1, R_1-1) + maxPrefixSum(L_2+1, R_2))$$</p>
+
+    <p>One last observation you need to make is that, of course, the right bound has to be at or after the left bound, and vice versa. Thus, \(L_2 = min(L_2, R_2)\) and \(R_1 = max(L_1, R_1)\). This will avoid overcounting invalid ranges!</p>
+
+    <h2>Full Implementation</h2>
+    <pre><code class="language-cpp">
+/*
+    Author: Gian Alingog
+    Date: 03/08/2025
+    Saishuu Shinpan
+*/
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long long ll;
+
+#define endl "\n"
+#define REP(i, a, b) for (ll i = a; i < b; i++)
+#define fast_io() ios_base::sync_with_stdio(false); cin.tie(NULL)
+
+const ll INVALID = 1e18;
+
+struct Range {
+    ll sum, pref, suff, best;
+
+    Range(ll sum, ll pref, ll suff, ll best) : sum(sum), pref(pref), suff(suff), best(best) {;;}
+
+    bool operator==(const Range &other) const {
+        return sum == other.sum && pref == other.pref && suff == other.suff && best == other.best; 
+    }
+};
+
+const Range InvalidRange(-INVALID, -INVALID, -INVALID, -INVALID);
+
+struct SegmentTree {
+    int l, r;
+    ll sum, pref, suff, best;
+    SegmentTree *left, *right;
+
+    void merge() {
+        sum = left->sum + right->sum;
+        pref = max(left->pref, left->sum + right->pref);
+        suff = max(right->suff, right->sum + left->suff);
+        best = max({left->best, right->best, left->suff + right->pref});
+    }
+
+    SegmentTree(int l, int r, vector<ll> &data) : l(l), r(r) {
+        left = right = nullptr;
+
+        if (l == r) {
+            sum = pref = suff = best = data[l];
+            return;
+        }
+
+        int mid = (l + r) >> 1;
+        left = new SegmentTree(l, mid, data);
+        right = new SegmentTree(mid+1, r, data);
+
+        merge();
+    }
+
+    void update(int ind, ll upd) {
+        if (l == r) {
+            sum = pref = suff = best = upd;
+            return;
+        }
+
+        int mid = (l + r) >> 1;
+        if (ind <= mid) left->update(ind, upd);
+        else right->update(ind, upd);
+
+        merge();
+    }
+
+    Range combine(const Range &lfet, const Range &rgiht) {
+        if (lfet == InvalidRange && rgiht == InvalidRange) return InvalidRange;
+        if (lfet == InvalidRange) return rgiht;
+        if (rgiht == InvalidRange) return lfet;
+
+        Range res(
+            lfet.sum + rgiht.sum,
+            max(lfet.pref, lfet.sum + rgiht.pref),
+            max(rgiht.suff, rgiht.sum + lfet.suff),
+            max({lfet.best, rgiht.best, lfet.suff + rgiht.pref})
+        );
+
+        return res;
+    }
+
+    Range query(int ql, int qr) {
+        if (ql > r || qr < l) return InvalidRange;
+
+        if (ql <= l && r <= qr) return Range(sum, pref, suff, best);
+
+        return combine(left->query(ql, qr), right->query(ql, qr));
+    }
+};
+
+void solution() {
+    int n, q; cin >> n >> q;
+    vector<ll> v(n);
+    REP(i, 0, n) cin >> v[i];
+
+    SegmentTree tree(0, n-1, v);
+
+    while (q--) {
+        int query; cin >> query;
+
+        if (query == 1) {
+            int l1, l2, r1, r2; cin >> l1 >> l2 >> r1 >> r2;
+            l1--; l2--; r1--; r2--;
+            l2 = min(l2, r2);
+            r1 = max(l1, r1);
+
+            ll ans = 0;
+            if (l2 < r1) {
+                ans += tree.query(l1, l2).suff;
+                ans += tree.query(r1, r2).pref;
+                ans += (l2+1 <= r1-1) ? tree.query(l2+1, r1-1).sum : 0LL;
+
+                cout << ans << endl;
+            }
+
+            else {
+                Range middle = tree.query(r1, l2);
+                ans = max({
+                    middle.best,
+
+                    middle.sum +
+                    max(0LL, (l1 <= r1-1) ? tree.query(l1, r1-1).suff : 0LL) +
+                    max(0LL, (l2+1 <= r2) ? tree.query(l2+1, r2).pref : 0LL),
+
+                    middle.pref +
+                    max(0LL, (l1 <= r1-1) ? tree.query(l1, r1-1).suff : 0LL),
+
+                    middle.suff +
+                    max(0LL, (l2+1 <= r2) ? tree.query(l2+1, r2).pref : 0LL)
+                });
+                
+                cout << ans << endl;
+            }
+        }
+
+        else {
+            int ind, upd; cin >> ind >> upd; ind--;
+            tree.update(ind, upd);
+        }
+    }
+
+    return;
+}
+
+signed main() {
+    fast_io();
+
+    int tests; cin >> tests;
+    while (tests--) {
+        solution();
+    }
+
+    return 0;
+}
+    </code></pre>
+
+  </body>
+</html>
