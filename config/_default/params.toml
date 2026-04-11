@@ -19,7 +19,7 @@ SortBy              = "default"
 
 [sidebar]
     emoji    = "+"
-    subtitle = "CS Major at UCSB"
+    subtitle = "I used to dream about data structures, but now I live it in memory."
     avatar   = "img/avatar.jpg"
 
 [article]
