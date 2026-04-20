@@ -2,7 +2,7 @@
 title: Square Root Decomposition
 description: Fake divide and conquer.
 slug: square-root-decomposition
-date: 2026-04-10 00:00:00+0000
+date: 2026-04-20 00:00:00+0000
 image: 
 categories:
     - Computer Science
